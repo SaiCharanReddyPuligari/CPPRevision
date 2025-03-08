@@ -3,7 +3,7 @@
 using namespace std;
 
 class RiderMgr{
-    RiderMgr();
+    RiderMgr(); //for singleton constructor should be private
     static RiderMgr* riderMgrInstance;
     static mutex mtx;
     unordered_map<string, Rider*> ridersMap;

@@ -4,7 +4,7 @@ mutex RiderMgr::mtx;
 
 RiderMgr* RiderMgr::getRiderMgr(){
     if(riderMgrInstance == nullptr){
-        mtx.lock();
+        mtx.lock();//lock is expensive, so we put a lock only if the instance is null
         if(riderMgrInstance==nullptr){
             riderMgrInstance=new RiderMgr();
         }
