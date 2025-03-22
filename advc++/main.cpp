@@ -1,45 +1,65 @@
-#include <bits/stdc++.h>
-#include <execution>
-using namespace std;
-namespace fs=std::filesystem;
+#include <iostream>
+#include <thread>
+#include <atomic>
+#include <future>
+//int count=0;
+#include <mutex>
+std::mutex mt;
+std::atomic<int> count;
 
-struct Person
-{
-    int age;
-    string name;
-    long long no;
-};
-
-int sum(int a, int b){
-    cout<<"adding two number"<<endl;
-    this_thread::sleep_for(chrono::seconds(2));
-    int res=a+b;
-    return res;
+void run(){
+    //mt.lock();
+    //std::unique_lock<std::mutex> lock(mt);
+    for(int i=0;i<1000000;i++){
+        count++;
+    }
+    //mt.unlock();
 }
 
+//promise and future use to connect threads which depends on the result on one another
+
+void step5(std::promise<int> &&p1, long long start, long long end) {
+    long long oddSum=0;
+    for(long long i=0;i<=end;i++){
+        if(i&1){
+            oddSum+=i;
+        }
+    }
+    p1.set_value(oddSum);
+}
+
+void task(std::promise<int> &p){
+    try{
+        throw std::runtime_error("Task Failed");
+    }catch(std::exception& e){
+        p.set_exception(std::current_exception());
+    }
+}
 
 int main(){
+    // long long start=0, end=190000;
+    // std::promise<int> p1;
+    // //std::promise<int> p1;
+    // std::future<int> f1 = p1.get_future();
+    // std::thread t1(step5, std::move(p1), start, end);
+    // std::cout<<f1.get()<<std::endl;
 
-    // Person p{20, "John", 1234567890};//strutural binding//c++17
-    // auto [age, name, no] = p;
+    // t1.join();
 
-    // //parallel algorithms using multi-core
-    // vector<int> v = {11, 6, 34, 2, 8, 10, 43};
-    // sort(execution::par, v.begin(), v.end());//now the sort function uses multiple cores to sort the vector
+    std::promise<int> p;
+    std::future<int> f= p.get_future();
+    
+    std::thread t1(task, std::ref(p));
+    t1.join();
 
-    // //future and async
-    // for(int i=0;i<v.size();i++){
-    //     cout<<v[i]<<" ";
-    // }
-    // future<int> ft= async(sum, 8, 9);
-    // //sometasks
-    // int var=ft.get();
-    // cout<<var<<endl;
+    try{
+        int res=f.get();
 
-    // file system
-    fs::create_directory("temp");
-
-    fs::copy("scr.txt", "dest.cpp", fs::copy_options::overwrite_existing);
+    }catch(const std::exception& e){
+        std::cout<<"Eception: "<<e.what()<<std::endl;
+    }
 
     return 0;
+
+    
 }

@@ -28,14 +28,14 @@ class String{
         strcpy(res, str.res);
     }
     //construtors are used to initilize values whereas assigments are used to change
-   String ( String &&str){//similar to copy
+   String (String &&str){//similar to copy
     len=str.len; 
     res=str.res; //pointing rather than copying 
       str = nullptr; //deleting 
       str.len=0;
    }
     //assignment operator, copy is called when string is initialised first, where assignment works
-    String &operator= (const String& other){
+    String &operator = (const String& other){
         //handling self assignment
         if(this!=&other){ //if str3 = str4, this is str3 and other is str4
             //as we are assigning a new value to str3, free the prev memory to avoid leaks

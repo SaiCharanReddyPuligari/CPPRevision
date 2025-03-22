@@ -20,7 +20,7 @@ class uniqueptr{
             ptr.res = nullptr;
         }
 
-        uniqueptr& operator = (uniqueptr<T>&& ptr){//Rvale and Lvalue
+        uniqueptr& operator = (uniqueptr<T>&& ptr){//Rvale and Lvalue //move 
             //here we change the ptr value to RValue
             if(this!=&ptr){
                 if(res) {
